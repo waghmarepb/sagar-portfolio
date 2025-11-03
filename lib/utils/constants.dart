@@ -99,7 +99,7 @@ class AppUrls {
   static const String phone = '+91 7066090965';
   static const String location = 'Pune, Maharashtra';
   static const String linkedin = 'https://www.linkedin.com/in/sagarkumbhar';
-  static const String github = 'https://github.com/sagarkumbhar';
+  static const String github = 'https://github.com/kumbharsl';
   static const String stackoverflow = 'https://stackoverflow.com/users/sagarkumbhar';
   static const String twitter = 'https://twitter.com/sagarkumbhar';
 }
