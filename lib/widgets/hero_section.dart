@@ -27,9 +27,10 @@ class _HeroSectionState extends State<HeroSection>
       duration: const Duration(milliseconds: 1500),
     );
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
@@ -82,53 +83,63 @@ class _HeroSectionState extends State<HeroSection>
           children: [
             // Animated background shapes
             ..._buildAnimatedShapes(),
-            
+
             // Content
             Center(
-        child: Container(
-          constraints: BoxConstraints(
-            maxWidth: isMobile ? screenWidth : 1400,
-          ),
-          padding: EdgeInsets.symmetric(
-            horizontal: isMobile ? 20 : (isTablet ? 40 : 60),
-            vertical: isMobile ? 40 : 80,
-          ),
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: SlideTransition(
-              position: _slideAnimation,
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: isMobile ? screenWidth : 1400,
+                ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: isMobile ? 20 : (isTablet ? 40 : 60),
+                  vertical: isMobile ? 40 : 80,
+                ),
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: SlideTransition(
+                    position: _slideAnimation,
               child: isMobile
                   ? _buildMobileLayout()
-                  : Center(
-                      child: _buildContent(context, isMobile),
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: _buildContent(context, isMobile),
+                        ),
+                        const SizedBox(width: 60),
+                        Expanded(
+                          flex: 2,
+                          child: _buildFlutterImage(),
+                        ),
+                      ],
                     ),
+                  ),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildMobileLayout() {
-    return Column(
-      children: [
-        _buildContent(context, true),
-      ],
-    );
+    return Column(children: [_buildContent(context, true)]);
   }
 
   Widget _buildContent(BuildContext context, bool isMobile) {
     return Column(
-      crossAxisAlignment:
-          isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      crossAxisAlignment: isMobile
+          ? CrossAxisAlignment.center
+          : CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // Name
         Text(
           'Sagar Kumbhar',
-          style: AppTextStyles.heroTitle.copyWith(
-            fontSize: isMobile ? 36 : 56,
-          ),
+          style: AppTextStyles.heroTitle.copyWith(fontSize: isMobile ? 36 : 56),
           textAlign: isMobile ? TextAlign.center : TextAlign.left,
         ),
         const SizedBox(height: 16),
@@ -167,9 +178,7 @@ class _HeroSectionState extends State<HeroSection>
         // Description
         Text(
           'Passionate Flutter Developer specializing in building\nbeautiful cross-platform applications',
-          style: AppTextStyles.bodyText.copyWith(
-            fontSize: isMobile ? 14 : 16,
-          ),
+          style: AppTextStyles.bodyText.copyWith(fontSize: isMobile ? 14 : 16),
           textAlign: isMobile ? TextAlign.center : TextAlign.left,
         ),
 
@@ -179,8 +188,7 @@ class _HeroSectionState extends State<HeroSection>
         Wrap(
           spacing: 24,
           runSpacing: 12,
-          alignment:
-              isMobile ? WrapAlignment.center : WrapAlignment.start,
+          alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
           children: [
             _buildContactItem(Icons.email, AppUrls.email),
             _buildContactItem(Icons.phone, AppUrls.phone),
@@ -194,13 +202,14 @@ class _HeroSectionState extends State<HeroSection>
         Wrap(
           spacing: 16,
           runSpacing: 16,
-          alignment:
-              isMobile ? WrapAlignment.center : WrapAlignment.start,
+          alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
           children: [
             _buildSocialIcon(FontAwesomeIcons.linkedin, AppUrls.linkedin),
             _buildSocialIcon(FontAwesomeIcons.github, AppUrls.github),
             _buildSocialIcon(
-                FontAwesomeIcons.stackOverflow, AppUrls.stackoverflow),
+              FontAwesomeIcons.stackOverflow,
+              AppUrls.stackoverflow,
+            ),
             _buildSocialIcon(FontAwesomeIcons.twitter, AppUrls.twitter),
           ],
         ),
@@ -211,8 +220,7 @@ class _HeroSectionState extends State<HeroSection>
         Wrap(
           spacing: 16,
           runSpacing: 16,
-          alignment:
-              isMobile ? WrapAlignment.center : WrapAlignment.start,
+          alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
           children: [
             CustomButton(
               text: 'View Projects',
@@ -239,39 +247,97 @@ class _HeroSectionState extends State<HeroSection>
     );
   }
 
-  Widget _buildAvatar() {
-    final isMobile = ResponsiveHelper.isMobile(context);
-    final size = isMobile ? 250.0 : 350.0;
-    
-    return Center(
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: AppColors.orangeGradient,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primaryOrange.withOpacity(0.3),
-              blurRadius: 30,
-              spreadRadius: 5,
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.all(8),
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white,
-            image: const DecorationImage(
-              image: NetworkImage(
-                'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80',
+  Widget _buildFlutterImage() {
+    return TweenAnimationBuilder(
+      tween: Tween<double>(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 1500),
+      builder: (context, value, child) {
+        return Transform.scale(
+          scale: 0.8 + (0.2 * value),
+          child: Transform.rotate(
+            angle: 0.1 * (1 - value),
+            child: Opacity(
+              opacity: value,
+              child: Container(
+                padding: const EdgeInsets.all(40),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Glow effect
+                    Container(
+                      width: 350,
+                      height: 350,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [
+                            AppColors.primaryOrange.withOpacity(0.2),
+                            AppColors.primaryOrange.withOpacity(0.05),
+                            Colors.transparent,
+                          ],
+                        ),
+                      ),
+                    ),
+                    // Flutter logo
+                    Container(
+                      width: 300,
+                      height: 300,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primaryOrange.withOpacity(0.3),
+                            blurRadius: 30,
+                            spreadRadius: 5,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(30),
+                        child: Image.network(
+                          'https://storage.googleapis.com/cms-storage-bucket/4fd0db61df0567c0f352.png',
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                gradient: AppColors.orangeGradient,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: const Icon(
+                                Icons.flutter_dash,
+                                size: 150,
+                                color: Colors.white,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    // Floating animation
+                    TweenAnimationBuilder(
+                      tween: Tween<double>(begin: 0, end: 1),
+                      duration: const Duration(seconds: 3),
+                      builder: (context, floatValue, child) {
+                        return Transform.translate(
+                          offset: Offset(0, 10 * (0.5 - floatValue).abs()),
+                          child: const SizedBox.shrink(),
+                        );
+                      },
+                      onEnd: () {
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
-              fit: BoxFit.cover,
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -281,10 +347,7 @@ class _HeroSectionState extends State<HeroSection>
       children: [
         Icon(icon, size: 18, color: AppColors.primaryOrange),
         const SizedBox(width: 8),
-        Text(
-          text,
-          style: AppTextStyles.bodyText.copyWith(fontSize: 14),
-        ),
+        Text(text, style: AppTextStyles.bodyText.copyWith(fontSize: 14)),
       ],
     );
   }
@@ -307,11 +370,7 @@ class _HeroSectionState extends State<HeroSection>
               ),
             ],
           ),
-          child: FaIcon(
-            icon,
-            size: 20,
-            color: AppColors.primaryOrange,
-          ),
+          child: FaIcon(icon, size: 20, color: AppColors.primaryOrange),
         ),
       ),
     );
@@ -351,7 +410,7 @@ class _HeroSectionState extends State<HeroSection>
           },
         ),
       ),
-      
+
       // Floating circle 2
       Positioned(
         bottom: 150,
@@ -384,7 +443,7 @@ class _HeroSectionState extends State<HeroSection>
           },
         ),
       ),
-      
+
       // Floating circle 3
       Positioned(
         top: 250,
@@ -394,7 +453,10 @@ class _HeroSectionState extends State<HeroSection>
           duration: const Duration(seconds: 5),
           builder: (context, value, child) {
             return Transform.translate(
-              offset: Offset(10 * (0.5 - value).abs(), 15 * (0.5 - value).abs()),
+              offset: Offset(
+                10 * (0.5 - value).abs(),
+                15 * (0.5 - value).abs(),
+              ),
               child: Container(
                 width: 100,
                 height: 100,
@@ -417,25 +479,13 @@ class _HeroSectionState extends State<HeroSection>
           },
         ),
       ),
-      
+
       // Code-themed decorative elements
-      Positioned(
-        top: 50,
-        left: 50,
-        child: _buildFloatingCode('</>'),
-      ),
-      
-      Positioned(
-        bottom: 100,
-        right: 150,
-        child: _buildFloatingCode('{ }'),
-      ),
-      
-      Positioned(
-        top: 180,
-        right: 250,
-        child: _buildFloatingCode('⚡'),
-      ),
+      Positioned(top: 50, left: 50, child: _buildFloatingCode('</>')),
+
+      Positioned(bottom: 100, right: 150, child: _buildFloatingCode('{ }')),
+
+      Positioned(top: 180, right: 250, child: _buildFloatingCode('⚡')),
     ];
   }
 
@@ -467,4 +517,3 @@ class _HeroSectionState extends State<HeroSection>
     );
   }
 }
-
