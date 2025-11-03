@@ -56,6 +56,7 @@ class _HeroSectionState extends State<HeroSection>
   Widget build(BuildContext context) {
     final isMobile = ResponsiveHelper.isMobile(context);
     final isTablet = ResponsiveHelper.isTablet(context);
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
       width: double.infinity,
@@ -73,33 +74,38 @@ class _HeroSectionState extends State<HeroSection>
           ],
         ),
       ),
-      child: Padding(
-        padding: ResponsiveHelper.getScreenPadding(context).copyWith(
-          top: AppSpacing.xxxl,
-          bottom: AppSpacing.xxxl,
-        ),
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: SlideTransition(
-            position: _slideAnimation,
-            child: isMobile
-                ? _buildMobileLayout()
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        flex: isTablet ? 1 : 3,
-                        child: _buildContent(context, isMobile),
-                      ),
-                      if (!isMobile) const SizedBox(width: 64),
-                      if (!isMobile)
+      child: Center(
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: isMobile ? screenWidth : 1400,
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 20 : (isTablet ? 40 : 60),
+            vertical: isMobile ? 40 : 80,
+          ),
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: SlideTransition(
+              position: _slideAnimation,
+              child: isMobile
+                  ? _buildMobileLayout()
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
                         Expanded(
-                          flex: isTablet ? 1 : 2,
-                          child: _buildAvatar(),
+                          flex: isTablet ? 1 : 3,
+                          child: _buildContent(context, isMobile),
                         ),
-                    ],
-                  ),
+                        if (!isMobile) SizedBox(width: isTablet ? 40 : 80),
+                        if (!isMobile)
+                          Expanded(
+                            flex: isTablet ? 1 : 2,
+                            child: _buildAvatar(),
+                          ),
+                      ],
+                    ),
+            ),
           ),
         ),
       ),
@@ -239,10 +245,13 @@ class _HeroSectionState extends State<HeroSection>
   }
 
   Widget _buildAvatar() {
+    final isMobile = ResponsiveHelper.isMobile(context);
+    final size = isMobile ? 250.0 : 350.0;
+    
     return Center(
       child: Container(
-        width: 300,
-        height: 300,
+        width: size,
+        height: size,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           gradient: AppColors.orangeGradient,
