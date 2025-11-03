@@ -68,7 +68,7 @@ class _AboutSectionState extends State<AboutSection> {
                 children: [
                   // Main Description
                   Text(
-                    'Passionate Flutter Developer with 5+ years of experience in building cross-platform applications. Specialized in Flutter/Dart with extensive full-stack expertise across multiple technologies.',
+                    'Passionate Flutter Developer with 3+ years of experience in building cross-platform applications. Specialized in Flutter/Dart with extensive full-stack expertise across multiple technologies.',
                     style: AppTextStyles.bodyText.copyWith(
                       fontSize: isMobile ? 16 : 18,
                       height: 1.8,
@@ -83,7 +83,7 @@ class _AboutSectionState extends State<AboutSection> {
                   const SizedBox(height: 24),
 
                   Text(
-                    'Currently leading development teams and architecting scalable solutions at Tech Solutions Inc. My expertise spans mobile, web, and desktop development, with a strong focus on creating exceptional user experiences and performant applications.',
+                    'Currently working at Brilliantech Software Pvt Ltd in Baner, Pune, where I have progressed from Junior to Senior Developer. My expertise spans mobile, web, and desktop development, with a strong focus on creating exceptional user experiences and performant applications.',
                     style: AppTextStyles.bodyText.copyWith(
                       fontSize: isMobile ? 16 : 18,
                       height: 1.8,
@@ -102,9 +102,9 @@ class _AboutSectionState extends State<AboutSection> {
                     runSpacing: 32,
                     alignment: WrapAlignment.center,
                     children: [
-                      _buildStat('5+', 'Years Experience'),
-                      _buildStat('13+', 'Projects Completed'),
-                      _buildStat('500K+', 'App Downloads'),
+                      _buildStat('3+', 'Years Experience'),
+                      _buildStat('10+', 'Projects Completed'),
+                      _buildStat('100K+', 'App Downloads'),
                       _buildStat('100%', 'Client Satisfaction'),
                     ]
                         .asMap()

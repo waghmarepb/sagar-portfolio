@@ -156,7 +156,7 @@ class _HeroSectionState extends State<HeroSection>
               speed: const Duration(milliseconds: 100),
             ),
             TypewriterAnimatedText(
-              '5+ Years Experience',
+              '3+ Years Experience',
               textStyle: AppTextStyles.heroSubtitle.copyWith(
                 fontSize: isMobile ? 18 : 24,
               ),
