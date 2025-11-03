@@ -58,23 +58,33 @@ class _HeroSectionState extends State<HeroSection>
     final isTablet = ResponsiveHelper.isTablet(context);
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return Container(
-      width: double.infinity,
-      constraints: BoxConstraints(
-        minHeight: ResponsiveHelper.getHeight(context) * 0.9,
-      ),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.white,
-            AppColors.offWhite,
-            AppColors.primaryOrange.withOpacity(0.05),
-          ],
+    return MouseRegion(
+      onHover: (_) {
+        // Trigger subtle animation on hover
+      },
+      child: Container(
+        width: double.infinity,
+        constraints: BoxConstraints(
+          minHeight: ResponsiveHelper.getHeight(context) * 0.9,
         ),
-      ),
-      child: Center(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white,
+              AppColors.offWhite,
+              AppColors.primaryOrange.withOpacity(0.05),
+            ],
+          ),
+        ),
+        child: Stack(
+          children: [
+            // Animated background shapes
+            ..._buildAnimatedShapes(),
+            
+            // Content
+            Center(
         child: Container(
           constraints: BoxConstraints(
             maxWidth: isMobile ? screenWidth : 1400,
@@ -89,21 +99,8 @@ class _HeroSectionState extends State<HeroSection>
               position: _slideAnimation,
               child: isMobile
                   ? _buildMobileLayout()
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          flex: isTablet ? 1 : 3,
-                          child: _buildContent(context, isMobile),
-                        ),
-                        if (!isMobile) SizedBox(width: isTablet ? 40 : 80),
-                        if (!isMobile)
-                          Expanded(
-                            flex: isTablet ? 1 : 2,
-                            child: _buildAvatar(),
-                          ),
-                      ],
+                  : Center(
+                      child: _buildContent(context, isMobile),
                     ),
             ),
           ),
@@ -115,8 +112,6 @@ class _HeroSectionState extends State<HeroSection>
   Widget _buildMobileLayout() {
     return Column(
       children: [
-        _buildAvatar(),
-        const SizedBox(height: 32),
         _buildContent(context, true),
       ],
     );
@@ -319,6 +314,156 @@ class _HeroSectionState extends State<HeroSection>
           ),
         ),
       ),
+    );
+  }
+
+  List<Widget> _buildAnimatedShapes() {
+    return [
+      // Floating circle 1
+      Positioned(
+        top: 100,
+        right: 100,
+        child: TweenAnimationBuilder(
+          tween: Tween<double>(begin: 0, end: 1),
+          duration: const Duration(seconds: 3),
+          builder: (context, value, child) {
+            return Transform.translate(
+              offset: Offset(0, 20 * (0.5 - value).abs()),
+              child: Container(
+                width: 150,
+                height: 150,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      AppColors.primaryOrange.withOpacity(0.2),
+                      AppColors.primaryOrange.withOpacity(0.05),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+          onEnd: () {
+            if (mounted) {
+              setState(() {});
+            }
+          },
+        ),
+      ),
+      
+      // Floating circle 2
+      Positioned(
+        bottom: 150,
+        left: 80,
+        child: TweenAnimationBuilder(
+          tween: Tween<double>(begin: 0, end: 1),
+          duration: const Duration(seconds: 4),
+          builder: (context, value, child) {
+            return Transform.translate(
+              offset: Offset(15 * (0.5 - value).abs(), 0),
+              child: Container(
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      AppColors.darkOrange.withOpacity(0.15),
+                      AppColors.darkOrange.withOpacity(0.03),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+          onEnd: () {
+            if (mounted) {
+              setState(() {});
+            }
+          },
+        ),
+      ),
+      
+      // Floating circle 3
+      Positioned(
+        top: 250,
+        left: 150,
+        child: TweenAnimationBuilder(
+          tween: Tween<double>(begin: 0, end: 1),
+          duration: const Duration(seconds: 5),
+          builder: (context, value, child) {
+            return Transform.translate(
+              offset: Offset(10 * (0.5 - value).abs(), 15 * (0.5 - value).abs()),
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      AppColors.lightOrange.withOpacity(0.25),
+                      AppColors.lightOrange.withOpacity(0.05),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+          onEnd: () {
+            if (mounted) {
+              setState(() {});
+            }
+          },
+        ),
+      ),
+      
+      // Code-themed decorative elements
+      Positioned(
+        top: 50,
+        left: 50,
+        child: _buildFloatingCode('</>'),
+      ),
+      
+      Positioned(
+        bottom: 100,
+        right: 150,
+        child: _buildFloatingCode('{ }'),
+      ),
+      
+      Positioned(
+        top: 180,
+        right: 250,
+        child: _buildFloatingCode('⚡'),
+      ),
+    ];
+  }
+
+  Widget _buildFloatingCode(String text) {
+    return TweenAnimationBuilder(
+      tween: Tween<double>(begin: 0, end: 1),
+      duration: const Duration(seconds: 2),
+      builder: (context, value, child) {
+        return Transform.scale(
+          scale: 0.8 + (0.2 * value),
+          child: Opacity(
+            opacity: 0.3 + (0.2 * value),
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 48,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primaryOrange.withOpacity(0.3),
+              ),
+            ),
+          ),
+        );
+      },
+      onEnd: () {
+        if (mounted) {
+          setState(() {});
+        }
+      },
     );
   }
 }
